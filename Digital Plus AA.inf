@@ -1,0 +1,553 @@
+; Dolby Digital Plus Advanced Audio
+; Copyright (c) 2014, Dolby Laboratories, Inc.
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = MEDIA
+ClassGUID   = {4d36e96c-e325-11ce-bfc1-08002be10318}
+provider    = %ProviderName%
+DriverVer   = %DriverBuildDate%,%DriverBuildVer%
+
+[SourceDisksNames]
+222=%DiskDescription%,,,
+
+[SourceDisksFiles]
+;; ANALOG 32-bit
+DDPA32.dll=222
+DDPD32A.dll=222
+DDPO32A.dll=222
+DDPP32A.dll=222
+
+;; ANALOG 64-bit
+DDPA64.dll=222
+DDPD64A.dll=222
+DDPO64A.dll=222
+DDPP64A.dll=222
+
+[DestinationDirs]
+DS1.Analog_APO_CopyList_x86   = 11     ; DIRID_SYSTEM  = %windir%\system32
+DS1.Analog_APO_CopyList_amd64 = 11     ; DIRID_SYSTEM  = %windir%\system32
+
+;; Copy APOs, Dolby DLL, and Dolby property page
+[DS1.Analog_APO_CopyList_x86]
+DDPA32.dll
+DDPD32A.dll
+DDPO32A.dll
+DDPP32A.dll
+
+[DS1.Analog_APO_CopyList_amd64]
+DDPA64.dll
+DDPD64A.dll
+DDPO64A.dll
+DDPP64A.dll
+
+;; Register APOs, Dolby DLL, and property page
+[DS1.Register_Analog_DLLs_x86]
+11,,DDPA32.dll,1
+11,,DDPD32A.dll,1
+11,,DDPO32A.dll,1
+11,,DDPP32A.dll,1
+
+
+[DS1.Register_Analog_DLLs_amd64]
+11,,DDPA64.dll,1
+11,,DDPD64A.dll,1
+11,,DDPO64A.dll,1
+11,,DDPP64A.dll,1
+
+
+[Manufacturer]
+%MfgName%=MfgModelSection, ntx86, ntamd64
+
+;; Excluding drivers from the "Add New Hardware" list.  Uncomment this when shipping product.
+[ControlFlags]
+ExcludeFromSelect = *
+
+[MfgModelSection.NTx86]
+%HdAudioFunctionDriver.UAA.DeviceDesc_DPP%       = HDAudio.DS1,   HDAUDIO\FUNC_01
+
+[MfgModelSection.NTamd64]
+%HdAudioFunctionDriver.UAA.DeviceDesc_DPP%       = HDAudio.DS1,   HDAUDIO\FUNC_01
+
+[OEMCustomBranding.AddProperty]
+;DeviceBrandingIcon,,,,"%1%\PropPage.dll,-200"  ;; PKEY_DriverPackage_BrandingIcon
+DeviceVendorWebSite,,,,"http://www.dolby.com"   ;; PKEY_DrvPkg_VendorWebSite
+
+;; ======================================================================================
+;; ======================================================================================
+;; Analog codec installation - Dolby Digital Plus Advanced Audio
+[HDAudio.DS1.ntx86]
+;;  Include/Need sections from OS installed hdaudio.inf file
+Include      = ks.inf, wdmaudio.inf, hdaudio.inf
+Needs        = KS.Registration, WDMAUDIO.Registration, HdAudOEM.CopyFiles, HdAudOEM.AddReg
+CopyFiles    = DS1.Analog_APO_CopyList_x86
+DelReg	     = DS1.DelReg, PinConfigOverride.DelReg
+RegisterDlls = DS1.Register_Analog_DLLs_x86
+AddReg	     = DS1.DolbyDigitalPlusAdvancedAudio_Defaults.ProfileKeys.AddReg, DS1.TuningKeys.AddReg
+AddProperty  = OEMCustomBranding.AddProperty
+
+[HDAudio.DS1.ntamd64]
+;;  Include/Need sections from OS installed hdaudio.inf file
+Include      = ks.inf, wdmaudio.inf, hdaudio.inf
+Needs        = KS.Registration, WDMAUDIO.Registration, HdAudOEM.CopyFiles, HdAudOEM.AddReg
+CopyFiles    = DS1.Analog_APO_CopyList_amd64
+DelReg	     = DS1.DelReg, PinConfigOverride.DelReg
+RegisterDlls = DS1.Register_Analog_DLLs_amd64
+AddReg	     = DS1.DolbyDigitalPlusAdvancedAudio_Defaults.ProfileKeys.AddReg, DS1.TuningKeys.AddReg
+AddProperty  = OEMCustomBranding.AddProperty
+
+;;  Include/Need sections from OS installed hdaudio.inf file
+[HDAudio.DS1.ntx86.HW]
+Include     = hdaudio.inf
+Needs       = HdAudModel.HW
+;; AddReg	= DriverLevel.AddReg	;; add filter drivers here
+
+[HDAudio.DS1.ntamd64.HW]
+Include     = hdaudio.inf
+Needs       = HdAudModel.HW
+;; AddReg	= DriverLevel.AddReg	;; add filter drivers here
+
+[HDAudio.DS1.ntx86.Interfaces]
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOutTopo%,          HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOutTopo%,          HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOut2Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOut2Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOut3Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOut3Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOut4Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOut4Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOut5Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOut5Topo%,         HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnectorTopo%,    HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnectorTopo%,    HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnector2Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnector2Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnector3Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnector3Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnector4Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnector4Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnector5Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnector5Topo%,   HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeaker2Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeaker2Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeaker3Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeaker3Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeaker4Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeaker4Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeaker5Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeaker5Topo%, HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOutTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOutTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOut2Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOut2Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOut3Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOut3Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOut4Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOut4Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOut5Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOut5Topo%, HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeakerTopo%,          HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeakerTopo%,          HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeaker2Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeaker2Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeaker3Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeaker3Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeaker4Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeaker4Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeaker5Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeaker5Topo%,         HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphoneTopo%,        HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphoneTopo%,        HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphone2Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphone2Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphone3Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphone3Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphone4Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphone4Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphone5Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphone5Topo%,       HDAudio.DS1.PrimaryHPTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedSpeakerSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedSpeakerSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedLineOutSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedLineOutSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+;----------------------------------------------------------
+; SPDIF Out is handled differently from other endpoints
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOutTopo%,         HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOutTopo%,         HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOut2Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOut2Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOut3Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOut3Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOut4Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOut4Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOut5Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOut5Topo%,        HDAudio.DS1.SpdifOutTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOutLineOutTopo%,  HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOutLineOutTopo%,  HDAudio.DS1.SpdifOutTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOutSpeakerTopo%,  HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOutSpeakerTopo%,  HDAudio.DS1.SpdifOutTopo
+
+[HDAudio.DS1.ntamd64.Interfaces]
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOutTopo%,          HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOutTopo%,          HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOut2Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOut2Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOut3Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOut3Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOut4Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOut4Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineOut5Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineOut5Topo%,         HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnectorTopo%,    HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnectorTopo%,    HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnector2Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnector2Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnector3Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnector3Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnector4Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnector4Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eLineConnector5Topo%,   HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eLineConnector5Topo%,   HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeaker2Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeaker2Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeaker3Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeaker3Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeaker4Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeaker4Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpSpeaker5Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpSpeaker5Topo%, HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOutTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOutTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOut2Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOut2Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOut3Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOut3Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOut4Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOut4Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedHpLineOut5Topo%, HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedHpLineOut5Topo%, HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeakerTopo%,          HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeakerTopo%,          HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeaker2Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeaker2Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeaker3Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeaker3Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeaker4Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeaker4Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpeaker5Topo%,         HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpeaker5Topo%,         HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphoneTopo%,        HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphoneTopo%,        HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphone2Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphone2Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphone3Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphone3Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphone4Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphone4Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eHeadphone5Topo%,       HDAudio.DS1.PrimaryHPTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eHeadphone5Topo%,       HDAudio.DS1.PrimaryHPTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedSpeakerSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedSpeakerSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSlavedLineOutSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSlavedLineOutSpeakerTopo%,  HDAudio.DS1.PrimaryTopo
+;----------------------------------------------------------
+; SPDIF Out is handled differently from other endpoints
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOutTopo%,         HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOutTopo%,         HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOut2Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOut2Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOut3Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOut3Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOut4Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOut4Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOut5Topo%,        HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOut5Topo%,        HDAudio.DS1.SpdifOutTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOutLineOutTopo%,  HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOutLineOutTopo%,  HDAudio.DS1.SpdifOutTopo
+
+AddInterface=%KSCATEGORY_AUDIO%,   %KSNAME_eSpdifOutSpeakerTopo%,  HDAudio.DS1.SpdifOutTopo
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_eSpdifOutSpeakerTopo%,  HDAudio.DS1.SpdifOutTopo
+
+;----------------------------------------------------------
+
+[HDAudio.DS1.ntx86.Services]
+Include=hdaudio.inf
+Needs=HdAudModel.Services
+;; AddService =
+;; add services and filter drivers here
+
+[HDAudio.DS1.ntamd64.Services]
+Include=hdaudio.inf
+Needs=HdAudModel.Services
+;; AddService =
+;; add services and filter drivers here
+
+;; ======================================================================================
+[DS1.TuningKeys.AddReg]
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\StaticKeys", "{8A92D74F-1332-43f6-AB72-01C0E37F1CF0},0", %REG_DWORD%, 0x0000021F
+
+;; ======================================================================================
+
+[PinConfigOverride.DelReg]
+HKR,PinConfigOverrideVerbs
+
+;; ======================================================================================
+
+[DS1.DolbyDigitalPlusAdvancedAudio_Defaults.ProfileKeys.AddReg]
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\StaticKeys", "{DD0DF94B-53A2-4a92-854E-91F42E28FD7B},514",,    "7.6.5.1"
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\StaticKeys", "{DD0DF94B-53A2-4a92-854E-91F42E28FD7B},513", %REG_DWORD%, "7"
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\StaticKeys", "{DD0DF94B-53A2-4a92-854E-91F42E28FD7B},512", %REG_DWORD%, "6"
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\StaticKeys", "{DD0DF94B-53A2-4a92-854E-91F42E28FD7B},511", %REG_DWORD%, "4"
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\StaticKeys", "{DD0DF94B-53A2-4a92-854E-91F42E28FD7B},510", %REG_DWORD%, "9"
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\DynamicKeys", "{DD0DF94B-53A2-4A92-854E-91F42E28FD7B},2", %REG_DWORD%, 0x00000001
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\DynamicKeys", "{DD0DF94B-53A2-4A92-854E-91F42E28FD7B},1", %REG_DWORD%, 0x00000001
+
+[DS1.DelReg]  ; Erase stale DS1 dynamic and static property keys when reinstalling. Don't delete SOFTWARE\Dolby\DolbyDigitalPlus\AppKeys
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\StaticKeys"
+HKLM, "SOFTWARE\Dolby\DolbyDigitalPlus\DynamicKeys"
+
+;; ======================================================================================
+
+[HDAudio.DS1.PrimaryTopo]
+AddReg   = DS1AnalogLFX.AddReg, DS1_Spkr.AddReg, OEMSettingsAnalogOverride.AddReg
+
+[HDAudio.DS1.PrimaryHPTopo]
+AddReg   = DS1AnalogLFX.AddReg, DS1_HP.AddReg, OEMSettingsAnalogOverride.AddReg
+
+[DS1_Spkr.AddReg]
+;; put anything specific to speaker endpoints here
+
+[DS1_HP.AddReg]
+;; put anything specific to headphone endpoints here
+
+;; All FX\\0 entries in the same grouping
+[DS1AnalogLFX.AddReg]
+;; allows unsigned APOs to function properly, REMOVE for final release
+HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Audio","DisableProtectedAudioDG", %REG_DWORD%, 0x00000001
+
+HKR, "FX\\0", %PKEY_ItemNameDisplay%,                  ,%SYSFX_ANALOG_FriendlyName%
+HKR, "FX\\0", %PKEY_SYSFX_PreMixClsid%,                ,%SYSFX_ANALOG_PREMIX_CLSID%
+;HKR,"FX\\0", %PKEY_SYSFX_PostMixClsid%,               ,%SYSFX_ANALOG_POSTMIX_CLSID%
+HKR,"FX\\0", %PKEY_SYSFX_UiClsid%,                     ,%SYSFX_ANALOG_UI_CLSID%
+HKR, "FX\\0", %PKEY_SYSFX_Association%,                ,%KSNODETYPE_ANY%  ; GUID NULL means install on all endpoints: supply a specific GUID to install on a particular bridge pin node type
+HKR, "FX\\0", %PKEY_AudioEndpoint_Disable_SysFx%,      %REG_DWORD%, 0x00000000
+
+[HDAudio.DS1.SpdifOutTopo]
+AddReg   = HDAudio.DS1.SpdifOutTopo.AddReg, OEMSettingsSPDIFOverride.AddReg
+
+[HDAudio.DS1.SpdifOutTopo.AddReg]
+;; allows unsigned APOs to function properly, REMOVE for final release
+HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Audio","DisableProtectedAudioDG", %REG_DWORD%, 0x00000001
+
+HKR,"FX\\0", %PKEY_ItemNameDisplay%,                  ,%SYSFX_ANALOG_FriendlyName%
+HKR,"FX\\0", %PKEY_SYSFX_PreMixClsid%,                ,%SYSFX_ANALOG_PREMIX_CLSID%
+HKR,"FX\\0", %PKEY_SYSFX_PostMixClsid%,               ,%SYSFX_ANALOG_POSTMIX_CLSID%
+HKR,"FX\\0", %PKEY_SYSFX_UiClsid%,                    ,%SYSFX_ANALOG_UI_CLSID%
+HKR,"FX\\0", %PKEY_SYSFX_Association%,                ,%KSNODETYPE_SPDIF%  ; GUID NULL means install on all endpoints: supply a specific GUID to install on a particular bridge pin node type
+HKR,"FX\\0", %PKEY_AudioEndpoint_Disable_SysFx%,      %REG_DWORD%, 0x00000000
+
+;;
+;; All EP\\0 entries in the same grouping
+;;
+;; Set default format to 48kHz, 24-bit, Stereo
+;; Add endpoint extension property page
+;;
+
+[OEMSettingsAnalogOverride.AddReg]
+HKR,			"EP\\0", %PKEY_AudioEndpoint_Association%,         ,%KSNODETYPE_ANY%
+HKR,			"EP\\0", %PKEY_AudioEndpoint_Supports_EventDriven_Mode%, %REG_BINARY%, 0x1
+HKR,            "EP\\0", %PKEY_AudioEngine_OEMFormat%, %REG_BINARY%, 41,00,C8,70,28,00,00,00,FE,FF,02,00,80,BB,00,00,00,DC,05,00,08,00,20,00,16,00,18,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+;48k 24-bit HKR,"EP\\0", %PKEY_AudioEngine_OEMFormat%, %REG_BINARY%, 41,00,C8,70,28,00,00,00,FE,FF,02,00,80,BB,00,00,00,DC,05,00,08,00,20,00,16,00,18,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+;44k 16-bit HKR,"EP\\0", %PKEY_AudioEngine_OEMFormat%, %REG_BINARY%, 41,00,8C,70,28,00,00,00,FE,FF,02,00,44,AC,00,00,10,b1,02,00,04,00,10,00,16,00,10,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+;44k 24-bit HKR,"EP\\0", %PKEY_AudioEngine_OEMFormat%, %REG_BINARY%, 41,00,C8,70,28,00,00,00,FE,FF,02,00,44,AC,00,00,00,DC,05,00,08,00,20,00,16,00,18,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+
+[OEMSettingsSPDIFOverride.AddReg]
+HKR,			"EP\\0", %PKEY_AudioEndpoint_Association%,           ,%KSNODETYPE_SPDIF%
+HKR,			"EP\\0", %PKEY_AudioEndpoint_PhysicalSpeakers%,      %REG_DWORD%, 0x0000003F
+HKR,			"EP\\0", %PKEY_AudioEndpoint_FullRangeSpeakers%,     %REG_DWORD%, 0x0000003F
+HKR,			"EP\\0", %PKEY_AudioEndpoint_Supports_EventDriven_Mode%, %REG_BINARY%, 0x1
+HKR,			"EP\\0", %PKEY_AudioEngine_OEMFormat%, %REG_BINARY%, 41,00,C8,70,28,00,00,00,FE,FF,02,00,80,BB,00,00,00,DC,05,00,08,00,20,00,16,00,18,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+;44k 16-bit HKR,"EP\\0", %PKEY_AudioEngine_OEMFormat%, %REG_BINARY%, 41,00,8C,70,28,00,00,00,FE,FF,02,00,44,AC,00,00,10,b1,02,00,04,00,10,00,16,00,10,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+;44k 24-bit HKR,"EP\\0", %PKEY_AudioEngine_OEMFormat%, %REG_BINARY%, 41,00,C8,70,28,00,00,00,FE,FF,02,00,44,AC,00,00,00,DC,05,00,08,00,20,00,16,00,18,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+;48k 24-bit HKR,"EP\\0", %PKEY_AudioEngine_OEMFormat%, %REG_BINARY%, 41,00,C8,70,28,00,00,00,FE,FF,02,00,80,BB,00,00,00,DC,05,00,08,00,20,00,16,00,18,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+
+[Strings]
+ProviderName                         = "Dolby Laboratories, Inc."
+MfgName                              = "Dolby Laboratories, Inc."
+DiskDescription                      = "Dolby Installation Media"
+
+;;
+;; These are the strings passed to PcRegisterSubdevice for wave ports
+;;
+
+KSNAME_eSpeakerWave  = "eSpeakerWave"  ; non-localizable
+KSNAME_eSpeaker2Wave = "eSpeaker2Wave" ; non-localizable
+KSNAME_eSpeaker3Wave = "eSpeaker3Wave" ; non-localizable
+KSNAME_eSpeaker4Wave = "eSpeaker4Wave" ; non-localizable
+KSNAME_eSpeaker5Wave = "eSpeaker5Wave" ; non-localizable
+KSNAME_eSpeakerTopo  = "eSpeakerTopo"  ; non-localizable
+KSNAME_eSpeaker2Topo = "eSpeaker2Topo" ; non-localizable
+KSNAME_eSpeaker3Topo = "eSpeaker3Topo" ; non-localizable
+KSNAME_eSpeaker4Topo = "eSpeaker4Topo" ; non-localizable
+KSNAME_eSpeaker5Topo = "eSpeaker5Topo" ; non-localizable
+
+KSNAME_eLineOutWave  = "eLineOutWave"  ; non-localizable
+KSNAME_eLineOut2Wave = "eLineOut2Wave" ; non-localizable
+KSNAME_eLineOut3Wave = "eLineOut3Wave" ; non-localizable
+KSNAME_eLineOut4Wave = "eLineOut4Wave" ; non-localizable
+KSNAME_eLineOut5Wave = "eLineOut5Wave" ; non-localizable
+KSNAME_eLineOutTopo  = "eLineOutTopo"  ; non-localizable
+KSNAME_eLineOut2Topo = "eLineOut2Topo" ; non-localizable
+KSNAME_eLineOut3Topo = "eLineOut3Topo" ; non-localizable
+KSNAME_eLineOut4Topo = "eLineOut4Topo" ; non-localizable
+KSNAME_eLineOut5Topo = "eLineOut5Topo" ; non-localizable
+
+KSNAME_eLineConnectorWave  = "eLineConnectorWave"  ; non-localizable
+KSNAME_eLineConnector2Wave = "eLineConnector2Wave" ; non-localizable
+KSNAME_eLineConnector3Wave = "eLineConnector3Wave" ; non-localizable
+KSNAME_eLineConnector4Wave = "eLineConnector4Wave" ; non-localizable
+KSNAME_eLineConnector5Wave = "eLineConnector5Wave" ; non-localizable
+KSNAME_eLineConnectorTopo  = "eLineConnectorTopo"  ; non-localizable
+KSNAME_eLineConnector2Topo = "eLineConnector2Topo" ; non-localizable
+KSNAME_eLineConnector3Topo = "eLineConnector3Topo" ; non-localizable
+KSNAME_eLineConnector4Topo = "eLineConnector4Topo" ; non-localizable
+KSNAME_eLineConnector5Topo = "eLineConnector5Topo" ; non-localizable
+
+KSNAME_eHeadphoneWave  = "eHeadphoneWave"   ; non-localizable
+KSNAME_eHeadphone2Wave = "eHeadphone2Wave"  ; non-localizable
+KSNAME_eHeadphone3Wave = "eHeadphone3Wave"  ; non-localizable
+KSNAME_eHeadphone4Wave = "eHeadphone4Wave"  ; non-localizable
+KSNAME_eHeadphone5Wave = "eHeadphone5Wave"  ; non-localizable
+KSNAME_eHeadphoneTopo  = "eHeadphoneTopo"   ; non-localizable
+KSNAME_eHeadphone2Topo = "eHeadphone2Topo"  ; non-localizable
+KSNAME_eHeadphone3Topo = "eHeadphone3Topo"  ; non-localizable
+KSNAME_eHeadphone4Topo = "eHeadphone4Topo"  ; non-localizable
+KSNAME_eHeadphone5Topo = "eHeadphone5Topo"  ; non-localizable
+
+KSNAME_eSpdifOutWave   = "eSpdifOutWave" ; non-localizable
+KSNAME_eSpdifOutTopo   = "eSpdifOutTopo" ; non-localizable
+KSNAME_eSpdifOut2Wave  = "eSpdifOut2Wave" ; non-localizable
+KSNAME_eSpdifOut2Topo  = "eSpdifOut2Topo" ; non-localizable
+KSNAME_eSpdifOut3Wave  = "eSpdifOut2Wave" ; non-localizable
+KSNAME_eSpdifOut3Topo  = "eSpdifOut2Topo" ; non-localizable
+KSNAME_eSpdifOut4Wave  = "eSpdifOut2Wave" ; non-localizable
+KSNAME_eSpdifOut4Topo  = "eSpdifOut2Topo" ; non-localizable
+KSNAME_eSpdifOut5Wave  = "eSpdifOut2Wave" ; non-localizable
+KSNAME_eSpdifOut5Topo  = "eSpdifOut2Topo" ; non-localizable
+
+KSNAME_eSpdifOutSpeakerWave = "eSpdifOutSpeakerWave" ; non-localizable
+KSNAME_eSpdifOutSpeakerTopo = "eSpdifOutSpeakerTopo" ; non-localizable
+
+KSNAME_eSpdifOutLineOutWave = "eSpdifOutLineOutWave" ; non-localizable
+KSNAME_eSpdifOutLineOutTopo = "eSpdifOutLineOutTopo" ; non-localizable
+
+KSNAME_eSlavedHpSpeakerWave  = "eSlavedHpSpeakerWave"   ; non-localizable
+KSNAME_eSlavedHpSpeakerTopo  = "eSlavedHpSpeakerTopo"   ; non-localizable
+KSNAME_eSlavedHpSpeaker2Wave = "eSlavedHpSpeaker2Wave"  ; non-localizable
+KSNAME_eSlavedHpSpeaker2Topo = "eSlavedHpSpeaker2Topo"  ; non-localizable
+KSNAME_eSlavedHpSpeaker3Wave = "eSlavedHpSpeaker3Wave"  ; non-localizable
+KSNAME_eSlavedHpSpeaker3Topo = "eSlavedHpSpeaker3Topo"  ; non-localizable
+KSNAME_eSlavedHpSpeaker4Wave = "eSlavedHpSpeaker4Wave"  ; non-localizable
+KSNAME_eSlavedHpSpeaker4Topo = "eSlavedHpSpeaker4Topo"  ; non-localizable
+KSNAME_eSlavedHpSpeaker5Wave = "eSlavedHpSpeaker5Wave"  ; non-localizable
+KSNAME_eSlavedHpSpeaker5Topo = "eSlavedHpSpeaker5Topo"  ; non-localizable
+
+KSNAME_eSlavedHpLineOutWave  = "eSlavedHpLineOutWave"   ; non-localizable
+KSNAME_eSlavedHpLineOutTopo  = "eSlavedHpLineOutTopo"   ; non-localizable
+KSNAME_eSlavedHpLineOut2Wave = "eSlavedHpLineOut2Wave"  ; non-localizable
+KSNAME_eSlavedHpLineOut2Topo = "eSlavedHpLineOut2Topo"  ; non-localizable
+KSNAME_eSlavedHpLineOut3Wave = "eSlavedHpLineOut3Wave"  ; non-localizable
+KSNAME_eSlavedHpLineOut3Topo = "eSlavedHpLineOut3Topo"  ; non-localizable
+KSNAME_eSlavedHpLineOut4Wave = "eSlavedHpLineOut4Wave"  ; non-localizable
+KSNAME_eSlavedHpLineOut4Topo = "eSlavedHpLineOut4Topo"  ; non-localizable
+KSNAME_eSlavedHpLineOut5Wave = "eSlavedHpLineOut5Wave"  ; non-localizable
+KSNAME_eSlavedHpLineOut5Topo = "eSlavedHpLineOut5Topo"  ; non-localizable
+
+KSNAME_eSlavedLineOutSpeakerWave = "eSlavedLineOutSpeakerWave"   ; non-localizable
+KSNAME_eSlavedLineOutSpeakerTopo = "eSlavedLineOutSpeakerTopo"   ; non-localizable
+KSNAME_eSlavedSpeakerSpeakerWave = "eSlavedSpeakerSpeakerWave"   ; non-localizable
+KSNAME_eSlavedSpeakerSpeakerTopo = "eSlavedSpeakerSpeakerTopo"   ; non-localizable
+
+;;
+;; PropertyKey GUIDS
+;;
+PKEY_SYSFX_Association                        = "{D04E05A6-594B-4FB6-A80D-01AF5EED7D1D},0"
+PKEY_SYSFX_PreMixClsid                        = "{D04E05A6-594B-4FB6-A80D-01AF5EED7D1D},1"
+PKEY_SYSFX_PostMixClsid                       = "{D04E05A6-594B-4FB6-A80D-01AF5EED7D1D},2"
+PKEY_SYSFX_UiClsid                            = "{D04E05A6-594B-4FB6-A80D-01AF5EED7D1D},3"
+PKEY_ItemNameDisplay                          = "{B725F130-47EF-101A-A5F1-02608C9EEBAC},10"
+PKEY_AudioEndpoint_Ext_UiClsid                = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},1"
+PKEY_AudioEndpoint_Association                = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},2"
+PKEY_AudioEndpoint_PhysicalSpeakers           = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},3"
+PKEY_AudioEndpoint_FullRangeSpeakers          = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},6"
+
+PKEY_AudioEndpoint_Disable_SysFx              = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},5"
+
+PKEY_AudioEndpoint_ControlPanelPageProvider   = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E}"
+
+;;
+;; PKEY_AudioEngine_OEMFormat:  Specifies the default format that is used for rendering/capturing.
+;; vartype = VT_BLOB
+;;
+PKEY_AudioEngine_OEMFormat                    = "{E4870E26-3CC5-4CD2-BA46-CA0A9A70ED04},3"
+
+;; PKEY_AudioEndpoint_Supports_EventDriven_Mode: Specifies that the endpoint supports event-driven mode.
+PKEY_AudioEndpoint_Supports_EventDriven_Mode  = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},7"
+
+AUDIOENDPOINT_EXT_UI_CLSID                    = "{6C57B2A2-91F5-4b90-93D5-FAB82485ECA6}"
+
+KSCATEGORY_AUDIO                              = "{6994AD04-93EF-11D0-A3CC-00A0C9223196}"
+KSCATEGORY_RENDER                             = "{65E8773E-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_CAPTURE                            = "{65E8773D-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_TOPOLOGY                           = "{DDA54A40-1E4C-11D1-A050-405705C10000}"
+
+KSNODETYPE_ANY                                = "{00000000-0000-0000-0000-000000000000}"
+KSNODETYPE_SPEAKER                            = "{DFF21CE1-F70F-11D0-B917-00A0C9223196}"
+KSNODETYPE_HEADPHONE                          = "{DFF21CE2-F70F-11D0-B917-00A0C9223196}"
+KSNODETYPE_SPDIF                              = "{DFF21FE5-F70F-11D0-B917-00A0C9223196}"
+KSNODETYPE_HDMI_INTERFACE                     = "{D1B9CC2A-F519-417f-91C9-55FA65481001}"
+
+Proxy.CLSID                                   = "{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+
+HdAudioFunctionDriver.UAA.DeviceDesc_DPP          = "Dolby Digital Plus Advanced Audio"
+
+SYSFX_ANALOG_PREMIX_CLSID					  = "{AE0B08BE-FF0E-4FF6-BEC5-24BFD96B4050}" ; Analog LFX
+SYSFX_ANALOG_POSTMIX_CLSID                    = "{AE0B08BE-FF0E-4FF6-BEC5-24BFD96B4050}" ; Analog GFX
+SYSFX_ANALOG_UI_CLSID                         = "{DDE20A40-F390-4616-AE98-2BA9E8C70744}" ; Analog Prop Page
+SYSFX_ANALOG_FriendlyName                     = "Dolby DS1"
+
+REG_DWORD                                     = 0x00010001
+REG_MULTI_SZ                                  = 0x00010000
+REG_MULTI_SZ_APPEND                           = 0x00010008
+REG_MULTI_SZ_DELETE                           = 0x00018002
+REG_EXPAND_SZ                                 = 0x00020000
+REG_BINARY_NOCLOBBER                          = 0x00030003
+REG_BINARY                                    = 0x00000001
+
+; DriverBuildDate, not the version number, is the distinguishing factor in determining which driver is the best match for the hardware.
+; If one updates the driver package, but the date in the INF has not changed and an earlier version of the driver with the same date is already in the Driver Store,
+; then the new package will appear to install correctly but will not displace the existing driver in the driver store because it has the same date.
+
+DriverBuildDate	= "09/24/2014"
+DriverBuildVer	= "7.6.5.1"
